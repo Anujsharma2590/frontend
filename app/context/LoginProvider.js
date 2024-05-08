@@ -28,8 +28,6 @@ const LoginProvider = ({ children }) => {
     loadUserData();
   }, []);
 
-  console.log(profile);
-
   const login = async (userData) => {
     try {
       const { token, profileData } = userData;
