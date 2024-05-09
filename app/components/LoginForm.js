@@ -61,6 +61,7 @@ const LoginForm = () => {
               placeholder="example@email.com"
               autoCapitalize="none"
               error={touched.email && errors.email}
+              icon="email"
             />
             <FormInput
               value={values.password}
@@ -71,6 +72,7 @@ const LoginForm = () => {
               autoCapitalize="none"
               secureTextEntry
               error={touched.password && errors.password}
+              icon="lock"
             />
             <FormSubmitButton
               onPress={handleSubmit}

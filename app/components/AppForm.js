@@ -51,7 +51,7 @@ export default function AppForm({ navigation }) {
         <FromHeader
           leftHeading="Welcome"
           rightHeading="Back"
-          subHeading="Youtube Task App"
+          subHeading="Your Personal Wealth Manager App"
           rightHeaderOpacity={rightHeaderOpacity}
           leftHeaderTranslateX={leftHeaderTranslateX}
           rightHeaderTranslateY={rightHeaderTranslateY}

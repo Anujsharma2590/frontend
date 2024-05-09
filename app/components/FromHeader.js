@@ -29,6 +29,7 @@ const FromHeader = ({
             },
           ]}
         >
+          {" "}
           {rightHeading}
         </Animated.Text>
       </View>

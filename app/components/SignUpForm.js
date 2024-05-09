@@ -67,6 +67,7 @@ export default function SignupForm({ handleNavigationChange }) {
               onChangeText={handleChange("name")}
               onBlur={handleBlur("name")}
               error={touched.name && errors.name}
+              icon="account"
             />
             <FormInput
               placeholder="example@gmail.com"
@@ -76,6 +77,7 @@ export default function SignupForm({ handleNavigationChange }) {
               onChangeText={handleChange("email")}
               onBlur={handleBlur("email")}
               autoCapitalize="none"
+              icon="email"
             />
             <FormInput
               placeholder="********"
@@ -86,6 +88,7 @@ export default function SignupForm({ handleNavigationChange }) {
               onBlur={handleBlur("password")}
               autoCapitalize="none"
               secureTextEntry
+              icon="lock"
             />
             <FormSubmitButton
               title="Sign up"
