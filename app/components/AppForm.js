@@ -13,7 +13,7 @@ import SignupForm from "./SignUpForm.js";
 
 const { width } = Dimensions.get("window");
 
-export default function AppForm({ navigation }) {
+export default function AppForm() {
   const animation = useRef(new Animated.Value(0)).current;
 
   const scrollView = useRef();

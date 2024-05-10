@@ -63,12 +63,12 @@ const DrawerNavigator = () => {
     <Drawer.Navigator
       screenOptions={{
         headerShown: true,
-        // headerStyle: {
-        //   backgroundColor: "transparent",
-        //   elevation: 0,
-        //   shadowOpacity: 0,
-        // },
-        // headerTitle: "",
+        headerStyle: {
+          backgroundColor: "transparent",
+          elevation: 0,
+          shadowOpacity: 0,
+        },
+        headerTitleAlign: "center",
       }}
       drawerContent={(props) => <CustomDrawer {...props} />}
     >
