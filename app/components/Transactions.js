@@ -1,10 +1,10 @@
 import React from "react";
 import { View, StyleSheet, Text } from "react-native";
 
-const Tasks = () => {
+const Transactions = () => {
   return (
     <View style={styles.container}>
-      <Text>Tasks</Text>
+      <Text>Transactions</Text>
     </View>
   );
 };
@@ -17,4 +17,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Tasks;
+export default Transactions;
