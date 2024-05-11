@@ -1,8 +1,9 @@
 import React from "react";
-import { View, StyleSheet, Text, ScrollView } from "react-native";
+import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
 import Card from "./ui/Card";
-import Icon from "react-native-vector-icons/FontAwesome";
 import List from "./ui/List";
+import { useNavigation } from "@react-navigation/native";
+import AntDesign from "@expo/vector-icons/AntDesign";
 
 const getMoneyTextStyle = (value) => ({
   fontWeight: "bold",
@@ -16,6 +17,11 @@ const formatMoney = (value) => {
 };
 
 const Home = () => {
+  const navigation = useNavigation();
+  const handleSeeAllPress = () => {
+    // Navigate to the transactions screen
+    navigation.navigate("Transactions");
+  };
   return (
     <View style={styles.container}>
       <Card style={{ marginHorizontal: 30, marginVertical: 20 }}>
@@ -31,8 +37,8 @@ const Home = () => {
           {/* Total Expenses */}
           <View style={styles.item}>
             <Text style={styles.label}>
-              {" "}
-              <Icon name="arrow-down" size={15} color={"#ff4500"} /> Expenses
+              <AntDesign name="arrowdown" size={15} color="#ff4500" />
+              Expenses
             </Text>
             <Text style={getMoneyTextStyle(300)}>{formatMoney(300)}</Text>
           </View>
@@ -43,8 +49,8 @@ const Home = () => {
 
           <View style={styles.item}>
             <Text style={styles.label}>
-              {" "}
-              <Icon name="arrow-up" size={15} color={"#2e8b57"} /> Income
+              <AntDesign name="arrowup" size={15} color="#2e8b57" />
+              Income
             </Text>
             <Text style={getMoneyTextStyle(1000)}>{formatMoney(1000)}</Text>
           </View>
@@ -54,7 +60,9 @@ const Home = () => {
       {/* Transactions Heading */}
       <View style={styles.transactionHeading}>
         <Text style={styles.transactionTextHeading}>Transactions</Text>
-        <Text style={styles.seeAll}>See All</Text>
+        <TouchableOpacity onPress={handleSeeAllPress}>
+          <Text style={styles.seeAll}>See All</Text>
+        </TouchableOpacity>
       </View>
 
       <View style={styles.container}>
