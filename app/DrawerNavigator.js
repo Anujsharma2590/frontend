@@ -8,6 +8,7 @@ import {
 
 import Home from "./components/Home";
 import Transactions from "./components/Transactions";
+import AddExpenceIncome from "./components/AddExpenceIncome";
 import { useLogin } from "./context/LoginProvider";
 
 const Drawer = createDrawerNavigator();
@@ -74,6 +75,8 @@ const DrawerNavigator = () => {
     >
       <Drawer.Screen component={Home} name="Home" />
       <Drawer.Screen component={Transactions} name="Transactions" />
+      <Drawer.Screen component={AddExpenceIncome} name="Add Expence" />
+      <Drawer.Screen component={AddExpenceIncome} name="Add Income" />
     </Drawer.Navigator>
   );
 };
