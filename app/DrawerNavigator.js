@@ -90,11 +90,12 @@ const DrawerNavigator = () => {
       />
       <Drawer.Screen
         component={AddExpenceIncome}
-        name="Add Expense"
+        name="Add Income"
+        initialParams={{ type: "income" }}
         options={{
           drawerIcon: ({ focused, color, size }) => (
             <Ionicons
-              name={focused ? "cash" : "cash-outline"}
+              name={focused ? "wallet" : "wallet-outline"}
               size={size}
               color={color}
             />
@@ -103,11 +104,12 @@ const DrawerNavigator = () => {
       />
       <Drawer.Screen
         component={AddExpenceIncome}
-        name="Add Income"
+        initialParams={{ type: "expense" }}
+        name="Add Expense"
         options={{
           drawerIcon: ({ focused, color, size }) => (
             <Ionicons
-              name={focused ? "wallet" : "wallet-outline"}
+              name={focused ? "cash" : "cash-outline"}
               size={size}
               color={color}
             />

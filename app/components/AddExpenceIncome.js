@@ -28,9 +28,11 @@ const renderScene = SceneMap({
   second: AddExpense,
 });
 
-const AddExpenseIncome = () => {
+const AddExpenseIncome = ({ route }) => {
+  const { type } = route.params;
+
   const layout = useWindowDimensions();
-  const [index, setIndex] = useState(0);
+  const [index, setIndex] = useState(type === "income" ? 0 : 1);
 
   const tabBarStyle = {
     flexDirection: "row",
