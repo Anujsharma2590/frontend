@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const List = () => {
+const List = ({ data }) => {
   const renderDate = (dateString) => {
     const date = new Date(dateString);
     const day = date.getDate();
@@ -59,19 +59,19 @@ const List = () => {
   };
   const renderItem = ({ item }) => {
     const transactionTypeStyle =
-      item.transaction_category === "expense"
+      item.transactionType === "expense"
         ? styles.expenseText
         : styles.incomeText;
 
     return (
       <View style={styles.itemContainer}>
         <View style={styles.row}>
-          <Text style={styles.item}>{item.type}</Text>
+          <Text style={styles.item}>{item.heading}</Text>
           <Text style={styles.date}>{renderDate(item.date)}</Text>
         </View>
         <View>
           <Text style={[styles.item, transactionTypeStyle]}>
-            ₹{item.amount.toFixed(2)}
+            ₹{item.amount}
           </Text>
         </View>
       </View>
@@ -82,96 +82,12 @@ const List = () => {
     <FlatList
       data={data}
       renderItem={renderItem}
-      keyExtractor={(item) => item.id.toString()}
+      // keyExtractor={(item) => item.id.toString()}
     />
   );
 };
 
 export default List;
 
-const data = [
-  {
-    id: 1,
-    transaction_category: "expense",
-    type: "food",
-    amount: 50.25,
-    date: "2024-05-09T12:30:00Z",
-  },
-  {
-    id: 2,
-    transaction_category: "expense",
-    type: "transportation",
-    amount: 30.5,
-    date: "2024-05-08T10:15:00Z",
-  },
-  {
-    id: 3,
-    transaction_category: "income",
-    type: "salary",
-    amount: 1500.0,
-    date: "2024-05-05T08:00:00Z",
-  },
-  {
-    id: 147,
-    transaction_category: "expense",
-    type: "food",
-    amount: 50.25,
-    date: "2024-05-09T12:30:00Z",
-  },
-  {
-    id: 20,
-    transaction_category: "expense",
-    type: "transportation",
-    amount: 30.5,
-    date: "2024-05-08T10:15:00Z",
-  },
-  {
-    id: 78,
-    transaction_category: "income",
-    type: "salary",
-    amount: 1500.0,
-    date: "2024-05-05T08:00:00Z",
-  },
-  {
-    id: 90,
-    transaction_category: "expense",
-    type: "food",
-    amount: 50.25,
-    date: "2024-05-09T12:30:00Z",
-  },
-  {
-    id: 36,
-    transaction_category: "expense",
-    type: "transportation",
-    amount: 30.5,
-    date: "2024-05-08T10:15:00Z",
-  },
-  {
-    id: 67,
-    transaction_category: "income",
-    type: "salary",
-    amount: 1500.0,
-    date: "2024-05-05T08:00:00Z",
-  },
-  {
-    id: 23,
-    transaction_category: "expense",
-    type: "food",
-    amount: 50.25,
-    date: "2024-05-09T12:30:00Z",
-  },
-  {
-    id: 234,
-    transaction_category: "expense",
-    type: "transportation",
-    amount: 30.5,
-    date: "2024-05-08T10:15:00Z",
-  },
-  {
-    id: 123,
-    transaction_category: "income",
-    type: "salary",
-    amount: 7678.0,
-    date: "2024-05-05T08:00:00Z",
-  },
-];
+
+

@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
 import Card from "./ui/Card";
 import List from "./ui/List";
 import { useNavigation } from "@react-navigation/native";
 import AntDesign from "@expo/vector-icons/AntDesign";
+import { useLogin } from "../context/LoginProvider";
+import client from "../api/client";
 
 const getMoneyTextStyle = (value) => ({
   fontWeight: "bold",
@@ -18,16 +20,46 @@ const formatMoney = (value) => {
 
 const Home = () => {
   const navigation = useNavigation();
+  const { isLoggedIn } = useLogin();
+  const [transactions, setTransactions] = useState();
+
+  useEffect(() => {
+    const fetchTransactions = async () => {
+      try {
+        if (!isLoggedIn) {
+          return;
+        }
+        const response = await client.get("/transactions", {
+          headers: {
+            Authorization: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjE5LCJpYXQiOjE3MTU3NzAyMjQsImV4cCI6MTcxNTg1NjYyNH0.3badXEbQAJuoqbj_q9Ne-7aFX5NJs511VET6Q5z3Nus`, // Add the authorization token
+          },
+        });
+
+        if (response) {
+          setTransactions(response.data);
+        } else {
+          console.error("Error fetching transactions:", response.statusText);
+        }
+      } catch (error) {
+        console.error("Error fetching transactions:", error);
+      }
+    };
+
+    fetchTransactions();
+  }, [isLoggedIn]);
+  console.log(transactions);
   const handleSeeAllPress = () => {
     // Navigate to the transactions screen
-    navigation.navigate("Transactions");
+    navigation.navigate("Transactions", { transactions });
   };
   return (
     <View style={styles.container}>
       <Card style={{ marginHorizontal: 30, marginVertical: 20 }}>
         <View style={styles.row}>
           <Text style={styles.label}>Total Balance</Text>
-          <Text style={getMoneyTextStyle(700)}>{formatMoney(700)}</Text>
+          <Text style={getMoneyTextStyle(transactions?.totalBalance)}>
+            {formatMoney(transactions?.totalBalance)}
+          </Text>
         </View>
 
         <View style={styles.separator} />
@@ -40,7 +72,9 @@ const Home = () => {
               <AntDesign name="arrowdown" size={15} color="#ff4500" />
               Expenses
             </Text>
-            <Text style={getMoneyTextStyle(300)}>{formatMoney(300)}</Text>
+            <Text style={getMoneyTextStyle(transactions?.expence)}>
+              {formatMoney(transactions?.expense)}
+            </Text>
           </View>
 
           {/* Separator */}
@@ -52,7 +86,9 @@ const Home = () => {
               <AntDesign name="arrowup" size={15} color="#2e8b57" />
               Income
             </Text>
-            <Text style={getMoneyTextStyle(1000)}>{formatMoney(1000)}</Text>
+            <Text style={getMoneyTextStyle(transactions?.expense)}>
+              {formatMoney(transactions?.income)}
+            </Text>
           </View>
         </View>
       </Card>
@@ -66,7 +102,7 @@ const Home = () => {
       </View>
 
       <View style={styles.container}>
-        <List />
+        <List data={transactions?.transactions} />
       </View>
     </View>
   );

@@ -2,26 +2,49 @@ import * as React from "react";
 import { View, useWindowDimensions, StyleSheet } from "react-native";
 import { TabView, SceneMap, TabBar } from "react-native-tab-view";
 import List from "./ui/List";
+import { useRoute } from "@react-navigation/native";
 
-const AllRoute = () => <List />;
+const filterTransactionsByTimeFrame = (transactions, timeFrame) => {
+  const currentDate = new Date();
+  let startTime;
 
-const DayRoute = () => <List />;
+  switch (timeFrame) {
+    case "day":
+      startTime = new Date(
+        currentDate.getFullYear(),
+        currentDate.getMonth(),
+        currentDate.getDate()
+      );
+      break;
+    case "week":
+      startTime = new Date(currentDate.getTime() - 7 * 24 * 60 * 60 * 1000);
+      break;
+    case "month":
+      startTime = new Date(
+        currentDate.getFullYear(),
+        currentDate.getMonth(),
+        1
+      );
+      break;
+    case "year":
+      startTime = new Date(currentDate.getFullYear(), 0, 1);
+      break;
+    default:
+      startTime = new Date(
+        currentDate.getFullYear(),
+        currentDate.getMonth(),
+        currentDate.getDate()
+      );
+  }
 
-const WeekRoute = () => <List />;
-
-const MonthRoute = () => <List />;
-const YearRoute = () => <List />;
-
-const renderScene = SceneMap({
-  first: AllRoute,
-  second: DayRoute,
-  third: WeekRoute,
-  fourth: MonthRoute,
-  fifth: YearRoute,
-});
-
+  return transactions.filter(
+    (transaction) => new Date(transaction.date) >= startTime
+  );
+};
 export default function Transactions() {
   const layout = useWindowDimensions();
+  const route = useRoute();
+  const { transactions } = route.params;
 
   const [index, setIndex] = React.useState(0);
 
@@ -32,6 +55,39 @@ export default function Transactions() {
     { key: "fourth", title: "Month" },
     { key: "fifth", title: "Year" },
   ]);
+
+  const AllRoute = () => <List data={transactions.transactions} />;
+
+  const DayRoute = () => (
+    <List
+      data={filterTransactionsByTimeFrame(transactions.transactions, "day")}
+    />
+  );
+
+  const WeekRoute = () => (
+    <List
+      data={filterTransactionsByTimeFrame(transactions.transactions, "week")}
+    />
+  );
+
+  const MonthRoute = () => (
+    <List
+      data={filterTransactionsByTimeFrame(transactions.transactions, "month")}
+    />
+  );
+  const YearRoute = () => (
+    <List
+      data={filterTransactionsByTimeFrame(transactions.transactions, "year")}
+    />
+  );
+
+  const renderScene = SceneMap({
+    first: AllRoute,
+    second: DayRoute,
+    third: WeekRoute,
+    fourth: MonthRoute,
+    fifth: YearRoute,
+  });
 
   const tabBarStyle = {
     backgroundColor: "#fff", // Background color of the tab bar
