@@ -1,52 +1,23 @@
 import * as React from "react";
-import { View, useWindowDimensions, StyleSheet } from "react-native";
+import {
+  View,
+  useWindowDimensions,
+  StyleSheet,
+  ActivityIndicator,
+} from "react-native";
 import { TabView, SceneMap, TabBar } from "react-native-tab-view";
 import List from "./ui/List";
 import { useRoute } from "@react-navigation/native";
 
-const filterTransactionsByTimeFrame = (transactions, timeFrame) => {
-  const currentDate = new Date();
-  let startTime;
-
-  switch (timeFrame) {
-    case "day":
-      startTime = new Date(
-        currentDate.getFullYear(),
-        currentDate.getMonth(),
-        currentDate.getDate()
-      );
-      break;
-    case "week":
-      startTime = new Date(currentDate.getTime() - 7 * 24 * 60 * 60 * 1000);
-      break;
-    case "month":
-      startTime = new Date(
-        currentDate.getFullYear(),
-        currentDate.getMonth(),
-        1
-      );
-      break;
-    case "year":
-      startTime = new Date(currentDate.getFullYear(), 0, 1);
-      break;
-    default:
-      startTime = new Date(
-        currentDate.getFullYear(),
-        currentDate.getMonth(),
-        currentDate.getDate()
-      );
-  }
-
-  return transactions.filter(
-    (transaction) => new Date(transaction.date) >= startTime
-  );
-};
 export default function Transactions() {
   const layout = useWindowDimensions();
   const route = useRoute();
   const { transactions } = route.params;
 
   const [index, setIndex] = React.useState(0);
+  const [loading, setLoading] = React.useState(
+    !transactions || !transactions.transactions
+  ); // Set loading to true if transactions or transactions.transactions are undefined
 
   const [routes] = React.useState([
     { key: "first", title: "All" },
@@ -56,28 +27,63 @@ export default function Transactions() {
     { key: "fifth", title: "Year" },
   ]);
 
-  const AllRoute = () => <List data={transactions.transactions} />;
+  const filterTransactionsByTimeFrame = (transactions, timeFrame) => {
+    const currentDate = new Date();
+    let startTime;
 
+    switch (timeFrame) {
+      case "day":
+        startTime = new Date(
+          currentDate.getFullYear(),
+          currentDate.getMonth(),
+          currentDate.getDate()
+        );
+        break;
+      case "week":
+        startTime = new Date(currentDate.getTime() - 7 * 24 * 60 * 60 * 1000);
+        break;
+      case "month":
+        startTime = new Date(
+          currentDate.getFullYear(),
+          currentDate.getMonth(),
+          1
+        );
+        break;
+      case "year":
+        startTime = new Date(currentDate.getFullYear(), 0, 1);
+        break;
+      default:
+        startTime = new Date(
+          currentDate.getFullYear(),
+          currentDate.getMonth(),
+          currentDate.getDate()
+        );
+    }
+
+    return transactions.filter(
+      (transaction) => new Date(transaction.date) >= startTime
+    );
+  };
+
+  const AllRoute = () => <List data={transactions?.transactions} />;
   const DayRoute = () => (
     <List
-      data={filterTransactionsByTimeFrame(transactions.transactions, "day")}
+      data={filterTransactionsByTimeFrame(transactions?.transactions, "day")}
     />
   );
-
   const WeekRoute = () => (
     <List
-      data={filterTransactionsByTimeFrame(transactions.transactions, "week")}
+      data={filterTransactionsByTimeFrame(transactions?.transactions, "week")}
     />
   );
-
   const MonthRoute = () => (
     <List
-      data={filterTransactionsByTimeFrame(transactions.transactions, "month")}
+      data={filterTransactionsByTimeFrame(transactions?.transactions, "month")}
     />
   );
   const YearRoute = () => (
     <List
-      data={filterTransactionsByTimeFrame(transactions.transactions, "year")}
+      data={filterTransactionsByTimeFrame(transactions?.transactions, "year")}
     />
   );
 
@@ -90,12 +96,12 @@ export default function Transactions() {
   });
 
   const tabBarStyle = {
-    backgroundColor: "#fff", // Background color of the tab bar
-    elevation: 0, // Android elevation for tab bar
-    shadowOpacity: 0, // iOS shadow opacity for tab bar
-    borderBottomWidth: 1, // Border bottom width
-    borderBottomColor: "#ccc", // Border bottom color
-    marginBottom: 10, // Margin top for tab bar
+    backgroundColor: "#fff",
+    elevation: 0,
+    shadowOpacity: 0,
+    borderBottomWidth: 1,
+    borderBottomColor: "#ccc",
+    marginBottom: 10,
   };
 
   const renderTabBar = (props) => (
@@ -107,13 +113,38 @@ export default function Transactions() {
     />
   );
 
+  React.useEffect(() => {
+    setLoading(!transactions || !transactions.transactions); 
+  }, [transactions]);
+
   return (
-    <TabView
-      navigationState={{ index, routes }}
-      renderScene={renderScene}
-      onIndexChange={setIndex}
-      initialLayout={{ width: layout.width }}
-      renderTabBar={renderTabBar}
-    />
+    <>
+      {loading ? ( 
+        <View style={[styles.container, styles.horizontal]}>
+          <ActivityIndicator size="large" />
+        </View>
+      ) : (
+        <TabView
+          navigationState={{ index, routes }}
+          renderScene={renderScene}
+          onIndexChange={setIndex}
+          initialLayout={{ width: layout.width }}
+          renderTabBar={renderTabBar}
+        />
+      )}
+    </>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  horizontal: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    padding: 10,
+  },
+});

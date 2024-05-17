@@ -4,8 +4,8 @@ import Card from "./ui/Card";
 import List from "./ui/List";
 import { useNavigation } from "@react-navigation/native";
 import AntDesign from "@expo/vector-icons/AntDesign";
-import { useLogin } from "../context/LoginProvider";
 import client from "../api/client";
+import * as SecureStore from "expo-secure-store";
 
 const getMoneyTextStyle = (value) => ({
   fontWeight: "bold",
@@ -20,18 +20,18 @@ const formatMoney = (value) => {
 
 const Home = () => {
   const navigation = useNavigation();
-  const { isLoggedIn } = useLogin();
   const [transactions, setTransactions] = useState();
 
   useEffect(() => {
     const fetchTransactions = async () => {
       try {
-        if (!isLoggedIn) {
+        const token = await SecureStore.getItemAsync("userToken");
+        if (!token) {
           return;
         }
         const response = await client.get("/transactions", {
           headers: {
-            Authorization: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjE5LCJpYXQiOjE3MTU3NzAyMjQsImV4cCI6MTcxNTg1NjYyNH0.3badXEbQAJuoqbj_q9Ne-7aFX5NJs511VET6Q5z3Nus`, // Add the authorization token
+            Authorization: `${token}`, // Add the authorization token
           },
         });
 
@@ -46,8 +46,8 @@ const Home = () => {
     };
 
     fetchTransactions();
-  }, [isLoggedIn]);
-  console.log(transactions);
+  }, []);
+  
   const handleSeeAllPress = () => {
     // Navigate to the transactions screen
     navigation.navigate("Transactions", { transactions });
