@@ -19,7 +19,7 @@ import {
   Modal,
   TextInput,
 } from "react-native-paper";
-import { deleteTransaction, updateTransaction } from "./api";
+import { deleteTransaction, updateTransaction } from "../../api";
 import { useTransactions } from "../../api/TransactionContext";
 
 const List = ({ data }) => {
