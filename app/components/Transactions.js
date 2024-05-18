@@ -7,17 +7,16 @@ import {
 } from "react-native";
 import { TabView, SceneMap, TabBar } from "react-native-tab-view";
 import List from "./ui/List";
-import { useRoute } from "@react-navigation/native";
+import { useTransactions } from "../api/TransactionContext";
 
 export default function Transactions() {
   const layout = useWindowDimensions();
-  const route = useRoute();
-  const { transactions } = route.params;
+  const { transactions } = useTransactions();
 
   const [index, setIndex] = React.useState(0);
   const [loading, setLoading] = React.useState(
     !transactions || !transactions.transactions
-  ); // Set loading to true if transactions or transactions.transactions are undefined
+  ); 
 
   const [routes] = React.useState([
     { key: "first", title: "All" },

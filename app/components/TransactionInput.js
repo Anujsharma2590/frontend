@@ -8,9 +8,12 @@ import * as SecureStore from "expo-secure-store";
 import CustomButton from "./ui/CustomButton";
 
 import { formatDate } from "../utils/methods";
+import { useTransactions } from "../api/TransactionContext";
 
 const TransactionInput = (props) => {
   const value = props.type === "income" ? "bonus" : "utils";
+
+  const { fetchTransactions } = useTransactions();
 
   const [values, setValues] = useState({
     heading: value,
@@ -73,6 +76,7 @@ const TransactionInput = (props) => {
           ],
           { cancelable: false }
         );
+        fetchTransactions()
         setValues({ heading: value, amount: "", date: new Date() });
       } else {
         console.error("Error fetching transactions:", response.statusText);
@@ -105,6 +109,7 @@ const TransactionInput = (props) => {
           ],
           { cancelable: false }
         );
+        fetchTransactions()
         setValues({ heading: value, amount: "", date: new Date() });
       } else {
         console.error("Error fetching transactions:", response.statusText);

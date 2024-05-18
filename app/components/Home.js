@@ -1,12 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
 import Card from "./ui/Card";
 import List from "./ui/List";
 import { useNavigation } from "@react-navigation/native";
-import AntDesign from "@expo/vector-icons/AntDesign";
-import client from "../api/client";
-import * as SecureStore from "expo-secure-store";
 import Entypo from "@expo/vector-icons/Entypo";
+import { useTransactions } from "../api/TransactionContext";
 
 const getMoneyTextStyle = (value) => ({
   fontWeight: "bold",
@@ -21,37 +19,13 @@ const formatMoney = (value) => {
 
 const Home = () => {
   const navigation = useNavigation();
-  const [transactions, setTransactions] = useState();
 
-  useEffect(() => {
-    const fetchTransactions = async () => {
-      try {
-        const token = await SecureStore.getItemAsync("userToken");
-        if (!token) {
-          return;
-        }
-        const response = await client.get("/transactions", {
-          headers: {
-            Authorization: `${token}`, // Add the authorization token
-          },
-        });
+  const { transactions } = useTransactions();
 
-        if (response) {
-          setTransactions(response.data);
-        } else {
-          console.error("Error fetching transactions:", response.statusText);
-        }
-      } catch (error) {
-        console.error("Error fetching transactions:", error);
-      }
-    };
-
-    fetchTransactions();
-  }, []);
 
   const handleSeeAllPress = () => {
     // Navigate to the transactions screen
-    navigation.navigate("Transactions", { transactions });
+    navigation.navigate("Transactions");
   };
   return (
     <View style={styles.container}>
@@ -119,11 +93,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginVertical: 20,
   },
-  expenseLabel : {
+  expenseLabel: {
     fontSize: 22,
     fontWeight: "bold",
   },
-  incomeLabel : {
+  incomeLabel: {
     fontSize: 22,
     fontWeight: "bold",
   },
