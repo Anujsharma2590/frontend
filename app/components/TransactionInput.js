@@ -5,16 +5,9 @@ import { TextInput } from "react-native-paper";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import client from "../api/client";
 import * as SecureStore from "expo-secure-store";
+import CustomButton from "./ui/CustomButton";
 
-const formatDate = (date) => {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based
-  const day = String(date.getDate()).padStart(2, '0');
-  const hours = String(date.getHours()).padStart(2, '0');
-  const minutes = String(date.getMinutes()).padStart(2, '0');
-  const seconds = String(date.getSeconds()).padStart(2, '0');
-  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
-};
+import { formatDate } from "../utils/methods";
 
 const TransactionInput = (props) => {
   const value = props.type === "income" ? "bonus" : "utils";
@@ -157,7 +150,7 @@ const TransactionInput = (props) => {
       <Text style={styles.dateText}>
         Date: {values.date.toLocaleDateString()}
       </Text>
-      <Button onPress={submitTransaction} title="Add"  disabled={!values.amount}  />
+      <CustomButton onPress={submitTransaction} title="ADD" icon = "plus" disabled={!values.amount}/>
     </View>
   );
 };

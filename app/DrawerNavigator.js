@@ -35,7 +35,7 @@ const CustomDrawer = (props) => {
         <DrawerItemList {...props} />
       </DrawerContentScrollView>
       <View style={styles.logoutButtonContainer}>
-        <CustomButton onPress={logout} title="Log Out" icon = "sign-out"/>
+        <CustomButton onPress={logout} title="Log Out" icon = "sign-out" disabled={false}/>
       </View>
     </View>
   );
