@@ -6,6 +6,16 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import client from "../api/client";
 import * as SecureStore from "expo-secure-store";
 
+const formatDate = (date) => {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based
+  const day = String(date.getDate()).padStart(2, '0');
+  const hours = String(date.getHours()).padStart(2, '0');
+  const minutes = String(date.getMinutes()).padStart(2, '0');
+  const seconds = String(date.getSeconds()).padStart(2, '0');
+  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+};
+
 const TransactionInput = (props) => {
   const value = props.type === "income" ? "bonus" : "utils";
 
@@ -30,10 +40,13 @@ const TransactionInput = (props) => {
 
   const submitTransaction = async () => {
     try {
+      const formattedDate = formatDate(values.date);
+      const transactionValues = { ...values, date: formattedDate };
+  
       if (props.type === "income") {
-        await submitIncome(values);
+        await submitIncome(transactionValues);
       } else {
-        await submitExpense(values);
+        await submitExpense(transactionValues);
       }
     } catch (error) {
       console.error("Error submitting transaction:", error);
