@@ -7,10 +7,11 @@ import {
   Pressable,
 } from "react-native";
 import { TabView, SceneMap } from "react-native-tab-view";
+import { MaterialCommunityIcons, FontAwesome } from "@expo/vector-icons";
 import Card from "./ui/Card";
 import TransactionInput from "./TransactionInput";
-import {expenseDropdownData, incomeDropdownData} from './constants'
-
+import { expenseDropdownData, incomeDropdownData } from "./constants";
+import { theme } from "../../theme";
 const AddIncome = () => (
   <View>
     <Text style={styles.sceneText}>Add Income</Text>
@@ -32,37 +33,69 @@ const renderScene = SceneMap({
 
 const AddExpenseIncome = ({ route }) => {
   const { type } = route.params;
-
-  const layout = useWindowDimensions();
   const [index, setIndex] = useState(type === "income" ? 0 : 1);
+  const layout = useWindowDimensions();
 
-  const tabBarStyle = {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginVertical: 20,
-    marginHorizontal: 20,
-  };
-
-  const renderTabBar = ({ navigationState }) => (
-    <View style={tabBarStyle}>
-      {navigationState.routes.map((route, i) => (
-        <Pressable key={route.key} onPress={() => setIndex(i)}>
-          {({ pressed }) => (
-            <Card
-              style={[
-                styles.tab,
-                { backgroundColor: pressed ? "#F2EBFE" : "#FFEFEB" },
-              ]}
-            >
-              <Text
-                style={[styles.tabText, index === i && styles.activeTabText]}
-              >
-                {route.title}
-              </Text>
-            </Card>
-          )}
-        </Pressable>
-      ))}
+  const renderTabBar = () => (
+    <View style={styles.tabBarStyle}>
+      <Pressable onPress={() => setIndex(0)}>
+        {({ pressed }) => (
+          <Card
+            style={[
+              styles.tab,
+              {
+                backgroundColor:
+                  pressed || index === 0
+                    ? theme.colors.primary
+                    : theme.colors.card,
+                borderColor: theme.colors.border,
+                borderWidth: 0.5,
+              },
+            ]}
+          >
+            <MaterialCommunityIcons
+              name="home-import-outline"
+              size={24}
+              color={index === 0 ? theme.colors.card : theme.colors.textPrimary}
+            />
+            <Text style={[styles.tabText, index === 0 && styles.activeTabText]}>
+              Add Income
+            </Text>
+          </Card>
+        )}
+      </Pressable>
+      <FontAwesome
+        name="exchange"
+        size={24}
+        color={theme.colors.textPrimary}
+        style={styles.middleIcon}
+      />
+      <Pressable onPress={() => setIndex(1)}>
+        {({ pressed }) => (
+          <Card
+            style={[
+              styles.tab,
+              {
+                backgroundColor:
+                  pressed || index === 1
+                    ? theme.colors.primary
+                    : theme.colors.card,
+                borderColor: theme.colors.border,
+                borderWidth: 0.5,
+              },
+            ]}
+          >
+            <MaterialCommunityIcons
+              name="home-export-outline"
+              size={24}
+              color={index === 1 ? theme.colors.card : theme.colors.textPrimary}
+            />
+            <Text style={[styles.tabText, index === 1 && styles.activeTabText]}>
+              Add Expense
+            </Text>
+          </Card>
+        )}
+      </Pressable>
     </View>
   );
 
@@ -95,16 +128,25 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
   },
   tab: {
-    paddingVertical: 20,
-    paddingHorizontal: 20,
-    borderRadius: 10,
+    padding: 20,
+    borderRadius: 8,
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
   },
   tabText: {
     fontSize: 16,
   },
   activeTabText: {
-    color: "#6C63FF",
     fontWeight: "bold",
+    color: "#fff",
+  },
+  tabBarStyle: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    gap: 30,
+    marginVertical: 20,
   },
 });
 
