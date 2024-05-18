@@ -19,7 +19,7 @@ import {
   Modal,
   TextInput,
 } from "react-native-paper";
-import { deleteTransaction, updateTransaction } from "./api"; // Import your API functions
+import { deleteTransaction, updateTransaction } from "./api";
 import { useTransactions } from "../../api/TransactionContext";
 
 const List = ({ data }) => {
@@ -140,40 +140,30 @@ const List = ({ data }) => {
         >
           <Text style={styles.modalTitle}>Edit Transaction</Text>
           <TextInput
-            style={styles.input}
-            label="Heading"
-            value={editedHeading}
-            onChangeText={setEditedHeading}
-          />
-          <TextInput
+            mode="outlined"
             style={styles.input}
             label="Amount"
             value={editedAmount}
             onChangeText={setEditedAmount}
             keyboardType="numeric"
           />
-          <TextInput
-            style={styles.input}
-            label="Date"
-            value={editedDate}
-            onChangeText={setEditedDate}
-          />
-          <TextInput
-            style={styles.input}
-            label="Transaction Type"
-            value={editedTransactionType}
-            onChangeText={setEditedTransactionType}
-          />
-          <Button mode="contained" onPress={confirmEdit}>
-            Save
-          </Button>
-          <Button
-            mode="text"
-            onPress={() => setEditModalVisible(false)}
-            color="red"
-          >
-            Cancel
-          </Button>
+          <View style={styles.buttonContainer}>
+            <Button
+              textColor="#fff"
+              mode="outlined"
+              onPress={confirmEdit}
+              style={styles.button}
+            >
+              Save
+            </Button>
+            <Button
+              style={{ paddingHorizontal: 20 }}
+              mode="outlined"
+              onPress={() => setEditModalVisible(false)}
+            >
+              Cancel
+            </Button>
+          </View>
         </Modal>
       </Portal>
 
@@ -182,14 +172,28 @@ const List = ({ data }) => {
         <Dialog
           visible={isDeleteModalVisible}
           onDismiss={() => setDeleteModalVisible(false)}
+          style={styles.dialog}
         >
           <Dialog.Title>Delete Transaction</Dialog.Title>
           <Dialog.Content>
             <Text>Are you sure you want to delete this transaction?</Text>
           </Dialog.Content>
           <Dialog.Actions>
-            <Button onPress={confirmDelete}>Delete</Button>
-            <Button onPress={() => setDeleteModalVisible(false)}>Cancel</Button>
+            <Button
+              mode="outlined"
+              textColor="#fff"
+              style={styles.button}
+              onPress={confirmDelete}
+            >
+              Delete
+            </Button>
+            <Button
+              mode="outlined"
+              onPress={() => setDeleteModalVisible(false)}
+              style={{ paddingHorizontal: 20 }}
+            >
+              Cancel
+            </Button>
           </Dialog.Actions>
         </Dialog>
       </Portal>
@@ -200,6 +204,20 @@ const List = ({ data }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  dialog: {
+    backgroundColor: "#fff",
+  },
+  button: {
+    backgroundColor: "rgba(27, 27, 51, 1)",
+    color: "#fff",
+    paddingHorizontal: 20,
+  },
+  buttonContainer: {
+    width: "100%",
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    gap: 10,
   },
   itemContainer: {
     backgroundColor: "#fff",
