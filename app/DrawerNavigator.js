@@ -35,7 +35,7 @@ const CustomDrawer = (props) => {
         <DrawerItemList {...props} />
       </DrawerContentScrollView>
       <View style={styles.logoutButtonContainer}>
-        <CustomButton onPress={logout} title="Log Out" />
+        <CustomButton onPress={logout} title="Log Out" icon = "sign-out"/>
       </View>
     </View>
   );
@@ -125,6 +125,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     marginBottom: 20,
     borderColor: "#e0e0e0",
+    backgroundColor: "#F5F5F5"
   },
   profileImage: {
     width: 80,
