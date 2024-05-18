@@ -143,10 +143,12 @@ const styles = StyleSheet.create({
   },
   tabBarStyle: {
     flexDirection: "row",
-    justifyContent: "center",
+    justifyContent: "space-between",
     alignItems: "center",
     gap: 30,
-    marginVertical: 20,
+    marginTop: 40,
+    marginBottom: 30,
+    marginHorizontal: 20,
   },
 });
 

@@ -1,11 +1,12 @@
 import React, { useState } from "react";
-import { View, StyleSheet, Alert } from "react-native";
+import { View, StyleSheet, Alert , ScrollView} from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { TextInput } from "react-native-paper";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import client from "../api/client";
 import * as SecureStore from "expo-secure-store";
 import CustomButton from "./ui/CustomButton";
+
 
 import { formatDate } from "../utils/methods";
 import { useTransactions } from "../api/TransactionContext";
@@ -76,7 +77,7 @@ const TransactionInput = (props) => {
           ],
           { cancelable: false }
         );
-        fetchTransactions()
+        fetchTransactions();
         setValues({ heading: value, amount: "", date: new Date() });
       } else {
         console.error("Error fetching transactions:", response.statusText);
@@ -109,7 +110,7 @@ const TransactionInput = (props) => {
           ],
           { cancelable: false }
         );
-        fetchTransactions()
+        fetchTransactions();
         setValues({ heading: value, amount: "", date: new Date() });
       } else {
         console.error("Error fetching transactions:", response.statusText);
@@ -120,14 +121,13 @@ const TransactionInput = (props) => {
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <View style={styles.formContainer}>
         <View style={styles.inputContainer}>
           <Picker
             selectedValue={values.heading}
             onValueChange={(itemValue) => handleChange("heading", itemValue)}
             style={styles.picker}
-            
           >
             {props.dropdownData.map((item, index) => (
               <Picker.Item key={index} label={item.label} value={item.value} />
@@ -171,14 +171,16 @@ const TransactionInput = (props) => {
             />
           )}
         </View>
-        <CustomButton
-          onPress={submitTransaction}
-          title="ADD"
-          icon="plus"
-          disabled={!values.amount}
-        />
+        <View style={styles.addBtnContainer}>
+          <CustomButton
+            onPress={submitTransaction}
+            title="ADD"
+            icon="plus"
+            disabled={!values.amount}
+          />
+        </View>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 
@@ -193,6 +195,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     marginBottom: 10,
     overflow: "hidden",
+    marginTop: 10,
   },
   input: {
     backgroundColor: "#ffffff",
@@ -205,14 +208,24 @@ const styles = StyleSheet.create({
   datePickerContainer: {
     marginBottom: 10,
   },
-  dateText: {
-    marginBottom: 10,
+  selectDateButton: {
+    backgroundColor: "#007AFF", // Adjust the color to your preference
+    borderRadius: 5,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    alignItems: "center",
   },
-  error: {
-    color: "red",
-    marginBottom: 10,
+  selectDateButtonText: {
+    color: "#FFFFFF", // Adjust the color to your preference
+    fontWeight: "bold",
   },
-  formContainer: {},
+  formContainer: {
+    flexDirection: "column",
+    gap: 10,
+  },
+  addBtnContainer : {
+    marginTop: 30
+  }
 });
 
 export default TransactionInput;
