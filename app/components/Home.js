@@ -15,7 +15,7 @@ const getMoneyTextStyle = (value) => ({
 
 const formatMoney = (value) => {
   const absValue = Math.abs(value).toFixed(2);
-  return `${value < 0 ? "-" : ""}₹${absValue}`;
+  return `${value < 0 ? "-" : ""}$${absValue}`;
 };
 
 const Home = () => {
@@ -146,12 +146,14 @@ const styles = StyleSheet.create({
     marginHorizontal: 15,
   },
   transactionTextHeading: {
-    fontSize: 18,
-    fontWeight: "bold",
+    fontSize: 20,
+    fontWeight: "500",
   },
   seeAll: {
     fontSize: 16,
-    color: "#007bff",
+    color: "grey",
+    fontWeight: "500",
+    textDecorationLine: "underline",
   },
   transactionList: {
     paddingHorizontal: 20,
