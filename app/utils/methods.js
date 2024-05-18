@@ -117,3 +117,42 @@ export const getIcon = (type, value) => {
       return null;
   }
 };
+
+
+export const filterTransactionsByTimeFrame = (transactions, timeFrame) => {
+  const currentDate = new Date();
+  let startTime;
+
+  switch (timeFrame) {
+    case "day":
+      startTime = new Date(
+        currentDate.getFullYear(),
+        currentDate.getMonth(),
+        currentDate.getDate()
+      );
+      break;
+    case "week":
+      startTime = new Date(currentDate.getTime() - 7 * 24 * 60 * 60 * 1000);
+      break;
+    case "month":
+      startTime = new Date(
+        currentDate.getFullYear(),
+        currentDate.getMonth(),
+        1
+      );
+      break;
+    case "year":
+      startTime = new Date(currentDate.getFullYear(), 0, 1);
+      break;
+    default:
+      startTime = new Date(
+        currentDate.getFullYear(),
+        currentDate.getMonth(),
+        currentDate.getDate()
+      );
+  }
+
+  return transactions.filter(
+    (transaction) => new Date(transaction.date) >= startTime
+  );
+};
