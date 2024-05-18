@@ -50,19 +50,19 @@ export const getIcon = (type, value) => {
             <MaterialCommunityIcons
               name="home-variant"
               size={28}
-              color="#FF6347"
+              color="rgba(27, 27, 51, 1)"
             />
           );
         case "electronics":
           return (
-            <MaterialCommunityIcons name="laptop" size={28} color="#FF6347" />
+            <MaterialCommunityIcons name="laptop" size={28} color="rgba(27, 27, 51, 1)" />
           );
         case "dine":
           return (
             <MaterialCommunityIcons
               name="silverware-fork-knife"
               size={28}
-              color="#FF6347"
+              color="rgba(27, 27, 51, 1)"
             />
           );
         case "breakfast":
@@ -70,12 +70,12 @@ export const getIcon = (type, value) => {
             <MaterialCommunityIcons
               name="food-croissant"
               size={28}
-              color="#FF6347"
+              color="rgba(27, 27, 51, 1)"
             />
           );
         case "grocery":
           return (
-            <MaterialCommunityIcons name="cart" size={28} color="#FF6347" />
+            <MaterialCommunityIcons name="cart" size={28} color="rgba(27, 27, 51, 1)" />
           );
         default:
           return null;
@@ -87,7 +87,7 @@ export const getIcon = (type, value) => {
             <MaterialCommunityIcons
               name="cash-plus"
               size={28}
-              color="#32CD32"
+              color="rgba(27, 27, 51, 1)"
             />
           );
         case "parttime":
@@ -95,7 +95,7 @@ export const getIcon = (type, value) => {
             <MaterialCommunityIcons
               name="briefcase-clock"
               size={28}
-              color="#32CD32"
+              color="rgba(27, 27, 51, 1)"
             />
           );
         case "freelance":
@@ -103,12 +103,12 @@ export const getIcon = (type, value) => {
             <MaterialCommunityIcons
               name="account-cash"
               size={28}
-              color="#32CD32"
+              color="rgba(27, 27, 51, 1)"
             />
           );
         case "sales":
           return (
-            <MaterialCommunityIcons name="shopping" size={28} color="#32CD32" />
+            <MaterialCommunityIcons name="shopping" size={28} color="rgba(27, 27, 51, 1)" />
           );
         default:
           return null;

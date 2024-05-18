@@ -6,10 +6,11 @@ import { useNavigation } from "@react-navigation/native";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import client from "../api/client";
 import * as SecureStore from "expo-secure-store";
+import Entypo from "@expo/vector-icons/Entypo";
 
 const getMoneyTextStyle = (value) => ({
   fontWeight: "bold",
-  fontSize: 18,
+  fontSize: 30,
   color: value < 0 ? "#ff4500" : "#2e8b57", // Red for negative, custom green for positive
 });
 
@@ -47,7 +48,7 @@ const Home = () => {
 
     fetchTransactions();
   }, []);
-  
+
   const handleSeeAllPress = () => {
     // Navigate to the transactions screen
     navigation.navigate("Transactions", { transactions });
@@ -66,28 +67,27 @@ const Home = () => {
 
         {/* Total Expenses and Savings */}
         <View style={{ flexDirection: "row" }}>
-          {/* Total Expenses */}
           <View style={styles.item}>
-            <Text style={styles.label}>
-              <AntDesign name="arrowdown" size={15} color="#ff4500" />
-              Expenses
-            </Text>
-            <Text style={getMoneyTextStyle(transactions?.expence)}>
-              {formatMoney(transactions?.expense)}
+            <View style={styles.labelContainer}>
+              <Entypo name="arrow-with-circle-up" size={14} color="#2e8b57" />
+              <Text style={[styles.label, styles.labelGreen]}>Income</Text>
+            </View>
+            <Text style={styles.incomeLabel}>
+              {formatMoney(transactions?.income)}
             </Text>
           </View>
 
           {/* Separator */}
           <View style={styles.separatorVertical} />
-          {/* Savings */}
 
+          {/* Total Expenses */}
           <View style={styles.item}>
-            <Text style={styles.label}>
-              <AntDesign name="arrowup" size={15} color="#2e8b57" />
-              Income
-            </Text>
-            <Text style={getMoneyTextStyle(transactions?.expense)}>
-              {formatMoney(transactions?.income)}
+            <View style={styles.labelContainer}>
+              <Entypo name="arrow-with-circle-down" size={14} color="#ff4500" />
+              <Text style={[styles.label, styles.labelRed]}>Expense</Text>
+            </View>
+            <Text style={styles.expenseLabel}>
+              {formatMoney(transactions?.expense)}
             </Text>
           </View>
         </View>
@@ -119,18 +119,36 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginVertical: 20,
   },
-  label: {
-    fontSize: 16,
+  expenseLabel : {
+    fontSize: 22,
     fontWeight: "bold",
-    color: "#333",
+  },
+  incomeLabel : {
+    fontSize: 22,
+    fontWeight: "bold",
+  },
+  label: {
+    fontSize: 14,
+    fontWeight: "bold",
+  },
+  labelContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 7,
+  },
+  labelGreen: {
+    color: "#2e8b57",
+  },
+  labelRed: {
+    color: "#ff4500",
   },
   separator: {
     borderBottomWidth: 1,
-    borderBottomColor: "#ccc",
+    borderBottomColor: "lightgrey",
   },
   separatorVertical: {
     borderLeftWidth: 1,
-    borderLeftColor: "#ccc",
+    borderLeftColor: "lightgrey",
   },
   item: {
     flex: 1,
