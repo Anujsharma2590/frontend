@@ -1,8 +1,76 @@
-import React from "react";
-import { FlatList, StyleSheet, Text, View } from "react-native";
+import React, { useState } from "react";
+import {
+  FlatList,
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  Alert,
+} from "react-native";
 import { renderDate, getIcon } from "../../utils/methods";
+import { Swipeable } from "react-native-gesture-handler";
+import { FontAwesome } from "@expo/vector-icons";
+import { MaterialIcons } from "@expo/vector-icons";
+import {
+  Portal,
+  Button,
+  Provider,
+  Dialog,
+} from "react-native-paper";
+import { deleteTransaction } from "./api"; // Import your API functions
+import { useTransactions } from "../../api/TransactionContext";
 
 const List = ({ data }) => {
+  const [isDeleteModalVisible, setDeleteModalVisible] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(null);
+  const {fetchTransactions} = useTransactions();
+
+  const handleEdit = (item) => {
+    console.log("Edit item:", item);
+    // setSelectedItem(item);
+    // setEditedHeading(item.heading);
+    // setEditedAmount(item.amount.toString());
+    // setEditModalVisible(true);
+  };
+
+  const handleDelete = (item) => {
+    setSelectedItem(item);
+    setDeleteModalVisible(true);
+  };
+
+  const confirmDelete = async () => {
+    try {
+      await deleteTransaction(selectedItem.id);
+      setDeleteModalVisible(false);
+      fetchTransactions();
+    } catch (error) {
+      Alert.alert("Error", "Failed to delete transaction");
+    }
+  };
+
+  const renderRightActions = (item) => {
+    return (
+      <View style={styles.actionsContainer}>
+        <TouchableOpacity
+          style={styles.editButton}
+          onPress={() => handleEdit(item)}
+        >
+          <Text style={styles.actionText}>
+            <FontAwesome name="edit" size={24} />
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.deleteButton}
+          onPress={() => handleDelete(item)}
+        >
+          <Text style={styles.actionText}>
+            <MaterialIcons name="delete" size={24} />
+          </Text>
+        </TouchableOpacity>
+      </View>
+    );
+  };
+
   const renderItem = ({ item }) => {
     const transactionTypeStyle =
       item.transactionType === "expense"
@@ -10,26 +78,52 @@ const List = ({ data }) => {
         : styles.incomeText;
 
     return (
-      <View style={styles.itemContainer}>
-        <View style={styles.row}>
-          <View style={styles.iconContainer}>
-            {getIcon(item.transactionType, item.heading)}
+      <Swipeable renderRightActions={() => renderRightActions(item)}>
+        <View style={styles.itemContainer}>
+          <View style={styles.row}>
+            <View style={styles.iconContainer}>
+              {getIcon(item.transactionType, item.heading)}
+            </View>
+            <View>
+              <Text style={[styles.item, styles.heading]}>{item.heading}</Text>
+              <Text style={styles.date}>{renderDate(item.date)}</Text>
+            </View>
           </View>
           <View>
-            <Text style={[styles.item, styles.heading]}>{item.heading}</Text>
-            <Text style={styles.date}>{renderDate(item.date)}</Text>
+            <Text style={[styles.item, transactionTypeStyle]}>
+              {item.transactionType === "expense" ? "-" : "+"}${item.amount}
+            </Text>
           </View>
         </View>
-        <View>
-          <Text style={[styles.item, transactionTypeStyle]}>
-            {item.transactionType === "expense" ? "-" : "+"}${item.amount}
-          </Text>
-        </View>
-      </View>
+      </Swipeable>
     );
   };
 
-  return <FlatList data={data} renderItem={renderItem} />;
+  return (
+    <Provider>
+      <FlatList
+        data={data}
+        renderItem={renderItem}
+        keyExtractor={(item) => item.id.toString()}
+      />
+      {/* Delete Dialog */}
+      <Portal>
+        <Dialog
+          visible={isDeleteModalVisible}
+          onDismiss={() => setDeleteModalVisible(false)}
+        >
+          <Dialog.Title>Delete Transaction</Dialog.Title>
+          <Dialog.Content>
+            <Text>Are you sure you want to delete this transaction?</Text>
+          </Dialog.Content>
+          <Dialog.Actions>
+            <Button onPress={confirmDelete}>Delete</Button>
+            <Button onPress={() => setDeleteModalVisible(false)}>Cancel</Button>
+          </Dialog.Actions>
+        </Dialog>
+      </Portal>
+    </Provider>
+  );
 };
 
 const styles = StyleSheet.create({
@@ -82,6 +176,49 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     width: 45,
     height: 45,
+  },
+  actionsContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+    borderRadius: 15,
+    marginHorizontal: 10,
+    marginBottom: 10,
+  },
+  editButton: {
+    backgroundColor: "#4CAF50",
+    justifyContent: "center",
+    alignItems: "center",
+    width: 75,
+    borderRadius: 15,
+  },
+  deleteButton: {
+    backgroundColor: "#FF6347",
+    justifyContent: "center",
+    alignItems: "center",
+    width: 75,
+    borderRadius: 15,
+  },
+  actionText: {
+    color: "#fff",
+    fontWeight: "bold",
+    padding: 20,
+  },
+  modalContainer: {
+    backgroundColor: "white",
+    padding: 20,
+    borderRadius: 10,
+    alignItems: "center",
+    marginHorizontal: 20,
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginBottom: 10,
+  },
+  input: {
+    marginBottom: 10,
+    width: "100%",
   },
 });
 

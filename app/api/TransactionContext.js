@@ -1,7 +1,7 @@
 import React, { createContext, useState, useContext, useEffect } from "react";
 import client from "./client";
 import * as SecureStore from "expo-secure-store";
-import { ActivityIndicator, StyleSheet, View , Text} from "react-native";
+import { ActivityIndicator, StyleSheet, View} from "react-native";
 
 const TransactionsContext = createContext();
 
