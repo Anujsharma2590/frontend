@@ -16,26 +16,50 @@ import {
   Button,
   Provider,
   Dialog,
+  Modal,
+  TextInput,
 } from "react-native-paper";
-import { deleteTransaction } from "./api"; // Import your API functions
+import { deleteTransaction, updateTransaction } from "./api"; // Import your API functions
 import { useTransactions } from "../../api/TransactionContext";
 
 const List = ({ data }) => {
+  const [isEditModalVisible, setEditModalVisible] = useState(false);
   const [isDeleteModalVisible, setDeleteModalVisible] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
-  const {fetchTransactions} = useTransactions();
+  const [editedHeading, setEditedHeading] = useState("");
+  const [editedAmount, setEditedAmount] = useState("");
+  const [editedDate, setEditedDate] = useState("");
+  const [editedTransactionType, setEditedTransactionType] = useState("");
+  const { fetchTransactions } = useTransactions();
 
   const handleEdit = (item) => {
-    console.log("Edit item:", item);
-    // setSelectedItem(item);
-    // setEditedHeading(item.heading);
-    // setEditedAmount(item.amount.toString());
-    // setEditModalVisible(true);
+    setSelectedItem(item);
+    setEditedHeading(item.heading);
+    setEditedAmount(item.amount.toString());
+    setEditedDate(item.date);
+    setEditedTransactionType(item.transactionType);
+    setEditModalVisible(true);
   };
 
   const handleDelete = (item) => {
     setSelectedItem(item);
     setDeleteModalVisible(true);
+  };
+
+  const confirmEdit = async () => {
+    console.log(selectedItem);
+    try {
+      await updateTransaction(selectedItem.id, {
+        transactionType: editedTransactionType,
+        heading: editedHeading,
+        date: editedDate,
+        amount: parseFloat(editedAmount),
+      });
+      setEditModalVisible(false);
+      fetchTransactions();
+    } catch (error) {
+      Alert.alert("Error", "Failed to edit transaction");
+    }
   };
 
   const confirmDelete = async () => {
@@ -106,6 +130,53 @@ const List = ({ data }) => {
         renderItem={renderItem}
         keyExtractor={(item) => item.id.toString()}
       />
+
+      {/* Edit Modal */}
+      <Portal>
+        <Modal
+          visible={isEditModalVisible}
+          onDismiss={() => setEditModalVisible(false)}
+          contentContainerStyle={styles.modalContainer}
+        >
+          <Text style={styles.modalTitle}>Edit Transaction</Text>
+          <TextInput
+            style={styles.input}
+            label="Heading"
+            value={editedHeading}
+            onChangeText={setEditedHeading}
+          />
+          <TextInput
+            style={styles.input}
+            label="Amount"
+            value={editedAmount}
+            onChangeText={setEditedAmount}
+            keyboardType="numeric"
+          />
+          <TextInput
+            style={styles.input}
+            label="Date"
+            value={editedDate}
+            onChangeText={setEditedDate}
+          />
+          <TextInput
+            style={styles.input}
+            label="Transaction Type"
+            value={editedTransactionType}
+            onChangeText={setEditedTransactionType}
+          />
+          <Button mode="contained" onPress={confirmEdit}>
+            Save
+          </Button>
+          <Button
+            mode="text"
+            onPress={() => setEditModalVisible(false)}
+            color="red"
+          >
+            Cancel
+          </Button>
+        </Modal>
+      </Portal>
+
       {/* Delete Dialog */}
       <Portal>
         <Dialog
