@@ -6,15 +6,9 @@ const FormInput = (props) => {
   const { placeholder, error, icon } = props;
   return (
     <>
-      <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "space-between",
-          marginBottom: 5,
-        }}
-      >
+      <View style={styles.container}>
         {error ? (
-          <Text style={{ color: "red", fontSize: 12, marginBottom: 0 }}>
+          <Text style={styles.errorText}>
             {error}
           </Text>
         ) : null}
@@ -35,5 +29,15 @@ export default FormInput;
 const styles = StyleSheet.create({
   input: {
     marginBottom: 20,
+  },
+  container: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginBottom: 5,
+  },
+  errorText: {
+    color: "red",
+    fontSize: 12,
+    marginBottom: 0,
   },
 });
