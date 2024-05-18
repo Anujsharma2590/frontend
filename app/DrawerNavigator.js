@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, StyleSheet, Image, Button } from "react-native";
+import { View, Text, StyleSheet, Image } from "react-native";
 import {
   createDrawerNavigator,
   DrawerContentScrollView,
@@ -10,6 +10,7 @@ import Home from "./components/Home";
 import Transactions from "./components/Transactions";
 import AddExpenceIncome from "./components/AddExpenceIncome";
 import { useLogin } from "./context/LoginProvider";
+import CustomButton from "./components/ui/CustomButton";
 
 const Drawer = createDrawerNavigator();
 
@@ -17,7 +18,7 @@ const CustomDrawer = (props) => {
   const { profile, logout } = useLogin();
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={styles.container}>
       <DrawerContentScrollView {...props}>
         <View style={styles.profileContainer}>
           <Image
@@ -33,16 +34,8 @@ const CustomDrawer = (props) => {
         </View>
         <DrawerItemList {...props} />
       </DrawerContentScrollView>
-      <View
-        style={{
-          position: "absolute",
-          right: 0,
-          left: 0,
-          bottom: 50,
-          paddingHorizontal: 20,
-        }}
-      >
-        <Button onPress={logout} title="Log Out" />
+      <View style={styles.logoutButtonContainer}>
+        <CustomButton onPress={logout} title="Log Out" />
       </View>
     </View>
   );
@@ -121,6 +114,9 @@ const DrawerNavigator = () => {
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
   profileContainer: {
     flexDirection: "column",
     justifyContent: "center",
@@ -137,8 +133,6 @@ const styles = StyleSheet.create({
   },
   profileDetails: {
     marginTop: 15,
-    display: "flex",
-    justifyContent: "center",
     alignItems: "center",
   },
   profileName: {
@@ -149,5 +143,13 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "#777",
   },
+  logoutButtonContainer: {
+    position: "absolute",
+    right: 0,
+    left: 0,
+    bottom: 50,
+    paddingHorizontal: 20,
+  },
 });
+
 export default DrawerNavigator;
