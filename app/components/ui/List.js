@@ -11,6 +11,7 @@ import { renderDate, getIcon } from "../../utils/methods";
 import { Swipeable } from "react-native-gesture-handler";
 import { FontAwesome } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
+import * as SecureStore from "expo-secure-store";
 import {
   Portal,
   Button,
@@ -19,10 +20,12 @@ import {
   Modal,
   TextInput,
 } from "react-native-paper";
-import { deleteTransaction, updateTransaction } from "../../api";
 import { useTransactions } from "../../api/TransactionContext";
+import {useLogin} from '../../context/LoginProvider';
+import client from "../../api/client";
 
 const List = ({ data }) => {
+  const {profile} = useLogin();
   const [isEditModalVisible, setEditModalVisible] = useState(false);
   const [isDeleteModalVisible, setDeleteModalVisible] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
@@ -47,14 +50,14 @@ const List = ({ data }) => {
   };
 
   const confirmEdit = async () => {
-    console.log(selectedItem);
+    console.log(selectedItem, profile.id);
     try {
       await updateTransaction(selectedItem.id, {
         transactionType: editedTransactionType,
         heading: editedHeading,
         date: editedDate,
         amount: parseFloat(editedAmount),
-      });
+      }, profile.id);
       setEditModalVisible(false);
       fetchTransactions();
     } catch (error) {
@@ -62,9 +65,60 @@ const List = ({ data }) => {
     }
   };
 
+  
+  const deleteTransaction = async (transactionId, userId) => {
+    try {
+      const token = await SecureStore.getItemAsync("userToken");
+      const response = await client.delete(
+        `transaction/${transactionId}?userId=${userId}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (!response.data.success) {
+        throw new Error("Failed to delete transaction");
+      }
+    } catch (error) {
+      console.error("Error deleting transaction:", error);
+      throw error;
+    }
+  };
+
+  const updateTransaction = async (
+    transactionId,
+    updatedTransaction,
+    userId
+  ) => {
+    try {
+      const token = await SecureStore.getItemAsync("userToken");
+      const response = await client.put(
+        `transaction/${transactionId}?userId=${userId}`,
+        updatedTransaction,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (!response.data.success) {
+        throw new Error("Failed to edit transaction");
+      }
+    } catch (error) {
+      console.error("Error editing transaction:", error);
+      throw error;
+    }
+  };
+
+
   const confirmDelete = async () => {
     try {
-      await deleteTransaction(selectedItem.id);
+      await deleteTransaction(selectedItem.id, profile.id);
       setDeleteModalVisible(false);
       fetchTransactions();
     } catch (error) {

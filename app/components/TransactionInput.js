@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, StyleSheet, Alert , ScrollView} from "react-native";
+import { View, StyleSheet, Alert, ScrollView } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { TextInput } from "react-native-paper";
 import DateTimePicker from "@react-native-community/datetimepicker";
@@ -7,11 +7,12 @@ import client from "../api/client";
 import * as SecureStore from "expo-secure-store";
 import CustomButton from "./ui/CustomButton";
 
-
 import { formatDate } from "../utils/methods";
 import { useTransactions } from "../api/TransactionContext";
+import { useLogin } from "../context/LoginProvider";
 
 const TransactionInput = (props) => {
+  const { profile } = useLogin();
   const value = props.type === "income" ? "bonus" : "utils";
 
   const { fetchTransactions } = useTransactions();
@@ -60,9 +61,11 @@ const TransactionInput = (props) => {
       if (!token) {
         return;
       }
-      const response = await client.post("/income", values, {
+      const userId = profile.id;
+      const response = await client.post(`/income?userId=${userId}`, values, {
         headers: {
-          Authorization: `${token}`, // Add the authorization token
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
       });
 
@@ -93,9 +96,11 @@ const TransactionInput = (props) => {
       if (!token) {
         return;
       }
-      const response = await client.post("/expense", values, {
+      const userId = profile.id;
+      const response = await client.post(`/expense?userId=${userId}`, values, {
         headers: {
-          Authorization: `${token}`, // Add the authorization token
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
       });
 
@@ -223,9 +228,9 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     gap: 10,
   },
-  addBtnContainer : {
-    marginTop: 30
-  }
+  addBtnContainer: {
+    marginTop: 30,
+  },
 });
 
 export default TransactionInput;
