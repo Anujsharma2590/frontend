@@ -50,7 +50,6 @@ const List = ({ data }) => {
   };
 
   const confirmEdit = async () => {
-    console.log(selectedItem, profile.id);
     try {
       await updateTransaction(selectedItem.id, {
         transactionType: editedTransactionType,

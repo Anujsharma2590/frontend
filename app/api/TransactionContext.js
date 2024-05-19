@@ -15,7 +15,6 @@ export const TransactionsProvider = ({ children }) => {
       const profileString = await SecureStore.getItemAsync("userProfile");
       const profile = profileString ? JSON.parse(profileString) : null;
       const userId = profile ? profile.id : null;
-      console.log("token", profile, userId);
       if (!token || !userId) {
         setIsLoading(false);
         return;
