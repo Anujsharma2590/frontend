@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
 import Card from "./ui/Card";
 import List from "./ui/List";
@@ -20,7 +20,11 @@ const formatMoney = (value) => {
 const Home = () => {
   const navigation = useNavigation();
 
-  const { transactions } = useTransactions();
+  const { transactions, fetchTransactions } = useTransactions();
+
+  useEffect(() => {
+    fetchTransactions();
+  }, []);
 
 
   const handleSeeAllPress = () => {

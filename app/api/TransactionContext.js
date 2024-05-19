@@ -1,25 +1,25 @@
 import React, { createContext, useState, useContext, useEffect } from "react";
 import client from "./client";
 import * as SecureStore from "expo-secure-store";
-import { ActivityIndicator, StyleSheet, View} from "react-native";
-import { useLogin } from "../context/LoginProvider";
+import { ActivityIndicator, StyleSheet, View } from "react-native";
 
 const TransactionsContext = createContext();
 
 export const TransactionsProvider = ({ children }) => {
-  const {profile} = useLogin();
   const [transactions, setTransactions] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
   const fetchTransactions = async () => {
-    console.log(profile);
     try {
       const token = await SecureStore.getItemAsync("userToken");
-      if (!token) {
+      const profileString = await SecureStore.getItemAsync("userProfile");
+      const profile = profileString ? JSON.parse(profileString) : null;
+      const userId = profile ? profile.id : null;
+      console.log("token", profile, userId);
+      if (!token || !userId) {
         setIsLoading(false);
         return;
       }
-      const userId = profile.id;
       const response = await client.get(`/transactions?userId=${userId}`, {
         headers: {
           'Content-Type': 'application/json',
@@ -35,7 +35,7 @@ export const TransactionsProvider = ({ children }) => {
     } catch (error) {
       console.error("Error fetching transactions:", error);
     } finally {
-      setIsLoading(false); 
+      setIsLoading(false);
     }
   };
 
@@ -44,7 +44,7 @@ export const TransactionsProvider = ({ children }) => {
   }, []);
 
   return (
-    <TransactionsContext.Provider value={{ transactions, fetchTransactions , setTransactions}}>
+    <TransactionsContext.Provider value={{ transactions, fetchTransactions }}>
       {isLoading ? (
         <View style={[styles.container, styles.horizontal]}>
           <ActivityIndicator size="large" color="#0000ff" />
