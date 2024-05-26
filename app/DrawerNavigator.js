@@ -12,6 +12,33 @@ import AddExpenceIncome from "./components/AddExpenceIncome";
 import { useLogin } from "./context/LoginProvider";
 import CustomButton from "./components/ui/CustomButton";
 
+const About = () => {
+  return (
+    <View style={styles.aboutContainer}>
+      <Image
+        source={require("../assets/icon.jpeg")}
+        style={styles.logo}
+        resizeMode="contain"
+      />
+
+      <Text style={styles.aboutTitle}>About Expense Tracker</Text>
+      <Text style={styles.aboutText}>
+        Welcome to Expense Tracker, your personal finance manager. This app
+        allows you to effortlessly track your income and expenses, view detailed
+        transaction histories, and gain insights into your spending habits.
+      </Text>
+      <Text style={styles.aboutText}>
+        Our goal is to help you manage your finances better, providing tools to
+        keep your budget on track and ensuring you are always aware of your
+        financial situation.
+      </Text>
+      <Text style={styles.aboutText}>
+        Start managing your finances better today!
+      </Text>
+    </View>
+  );
+};
+
 const Drawer = createDrawerNavigator();
 
 const CustomDrawer = (props) => {
@@ -35,7 +62,12 @@ const CustomDrawer = (props) => {
         <DrawerItemList {...props} />
       </DrawerContentScrollView>
       <View style={styles.logoutButtonContainer}>
-        <CustomButton onPress={logout} title="Log Out" icon = "sign-out" disabled={false}/>
+        <CustomButton
+          onPress={logout}
+          title="Log Out"
+          icon="sign-out"
+          disabled={false}
+        />
       </View>
     </View>
   );
@@ -109,6 +141,21 @@ const DrawerNavigator = () => {
           ),
         }}
       />
+      <Drawer.Screen
+        component={About}
+        name="About"
+        options={{
+          drawerIcon: ({ focused, color, size }) => (
+            <Ionicons
+              name={
+                focused ? "information-circle" : "information-circle-outline"
+              }
+              size={size}
+              color={color}
+            />
+          ),
+        }}
+      />
     </Drawer.Navigator>
   );
 };
@@ -125,7 +172,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     marginBottom: 20,
     borderColor: "#e0e0e0",
-    backgroundColor: "#F5F5F5"
+    backgroundColor: "#F5F5F5",
   },
   profileImage: {
     width: 80,
@@ -149,6 +196,31 @@ const styles = StyleSheet.create({
     left: 0,
     bottom: 50,
     paddingHorizontal: 20,
+  },
+  aboutContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 20,
+  },
+  logo: {
+    width: 250, // Adjust the width as needed
+    height: 200, // Adjust the height as needed
+    marginBottom: 20,
+    backgroundColor: "transparent",
+  },
+  aboutTitle: {
+    fontSize: 26,
+    fontWeight: "bold",
+    color: "#333",
+    marginBottom: 15,
+    textAlign: "center",
+  },
+  aboutText: {
+    fontSize: 16,
+    color: "#555",
+    textAlign: "center",
+    marginBottom: 10,
+    lineHeight: 24,
   },
 });
 
